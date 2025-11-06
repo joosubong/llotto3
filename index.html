@@ -134,58 +134,22 @@
             // 카운트다운 시작
             uiManager.renderCountdown('countdownContainer');
             
-            // 데이터 동기화 후 결과 로드 및 표시 (주차 확인)
-            (async () => {
-                try {
-                    // 공용 데이터 동기화 (비동기)
-                    const data = await dataManager.loadData();
-                    
-                    const resultsData = dataManager.loadResults();
-                    const currentWeekInfo = numberGenerator.getCurrentWeekNumber();
-                    
-                    // 주차가 바뀌었는지 확인
-                    let shouldRegenerate = false;
-                    if (!resultsData || !resultsData.results) {
-                        // 결과가 없으면 새로 생성
-                        shouldRegenerate = true;
-                    } else if (!resultsData.weekInfo) {
-                        // 주차 정보가 없으면 (이전 버전 호환) 새로 생성
-                        shouldRegenerate = true;
-                    } else {
-                        // 주차가 바뀌었는지 확인
-                        const savedWeekInfo = resultsData.weekInfo;
-                        if (savedWeekInfo.weekNumber !== currentWeekInfo.weekNumber || 
-                            savedWeekInfo.year !== currentWeekInfo.year) {
-                            // 주차가 바뀌었으면 새로 생성
-                            shouldRegenerate = true;
-                        }
-                    }
-                    
-                    if (shouldRegenerate) {
-                        // 새 번호 생성
-                        const newResults = numberGenerator.generate(data);
-                        dataManager.saveResults(newResults, currentWeekInfo);
-                        uiManager.renderResults(newResults, 'resultsContainer');
-                    } else {
-                        // 기존 결과 표시
-                        uiManager.renderResults(resultsData.results, 'resultsContainer');
-                    }
-                } catch (error) {
-                    console.error('데이터 로드 오류:', error);
-                    // 오류 시 기본 동작 (동기 버전 사용)
-                    const data = dataManager.loadDataSync();
-                    const resultsData = dataManager.loadResults();
-                    if (resultsData && resultsData.results) {
-                        uiManager.renderResults(resultsData.results, 'resultsContainer');
-                    } else {
-                        // 결과가 없으면 생성
-                        const newResults = numberGenerator.generate(data);
-                        const currentWeekInfo = numberGenerator.getCurrentWeekNumber();
-                        dataManager.saveResults(newResults, currentWeekInfo);
-                        uiManager.renderResults(newResults, 'resultsContainer');
-                    }
-                }
-            })();
+            // 고정된 로또 번호 조합 (10개)
+            const fixedLottoNumbers = [
+                { numbers: [7, 16, 22, 34, 40, 42] },
+                { numbers: [3, 7, 15, 20, 36, 39] },
+                { numbers: [7, 14, 15, 31, 39, 43] },
+                { numbers: [3, 5, 6, 7, 34, 39] },
+                { numbers: [30, 31, 32, 37, 39, 43] },
+                { numbers: [3, 5, 17, 22, 33, 44] },
+                { numbers: [5, 12, 23, 30, 36, 40] },
+                { numbers: [3, 24, 27, 28, 39, 43] },
+                { numbers: [14, 26, 31, 33, 35, 40] },
+                { numbers: [1, 3, 11, 20, 33, 36] }
+            ];
+            
+            // 고정된 번호 표시
+            uiManager.renderResults(fixedLottoNumbers, 'resultsContainer');
             
             // 당첨번호 표시
             uiManager.renderWinningNumbers('winningNumbers');

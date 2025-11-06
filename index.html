@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LuckyStat 2.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- 상단 헤더 -->
+    <header class="bg-white shadow-md sticky top-0 z-40">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <h1 class="text-2xl font-bold text-indigo-600">🎲 LuckyStat 2.0</h1>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- 지난 회차 보기 섹션 -->
+        <section class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div id="winningNumbers" class="flex items-center gap-2"></div>
+                <button 
+                    onclick="uiManager.renderLastWeekModal()" 
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-lg transition-colors"
+                >
+                    지난 회차 보기
+                </button>
+            </div>
+        </section>
+
+        <!-- 카운트다운 섹션 -->
+        <section class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <div id="countdownContainer"></div>
+        </section>
+
+        <!-- 결과 섹션 -->
+        <section class="mb-8">
+            <div class="text-center mb-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">생성된 로또 번호</h2>
+                <p class="text-gray-600">통계 기반으로 생성된 10개의 번호 조합</p>
+            </div>
+            <div id="resultsContainer" class="mb-6">
+                <!-- 결과가 여기에 동적으로 렌더링됩니다 -->
+            </div>
+        </section>
+
+        <!-- 직접 만드는 번호 섹션 -->
+        <section class="mb-8">
+            <div class="text-center mb-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">직접 만드는 번호</h2>
+                <p class="text-gray-600">원하는 방식으로 번호를 직접 생성하세요</p>
+            </div>
+            
+            <!-- 생성 옵션 선택 -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                    <div class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        <input type="checkbox" value="random" id="random_check" class="w-5 h-5 text-indigo-600" checked>
+                        <label for="random_check" class="flex-1 font-medium text-gray-700 cursor-pointer">랜덤으로 생성</label>
+                        <input type="number" id="random_count" value="1" min="1" max="50" class="w-16 px-2 py-1 border border-gray-300 rounded text-center text-sm">
+                    </div>
+                    <div class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        <input type="checkbox" value="weighted" id="weighted_check" class="w-5 h-5 text-indigo-600" checked>
+                        <label for="weighted_check" class="flex-1 font-medium text-gray-700 cursor-pointer">통계기반</label>
+                        <input type="number" id="weighted_count" value="1" min="1" max="50" class="w-16 px-2 py-1 border border-gray-300 rounded text-center text-sm">
+                    </div>
+                    <div class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        <input type="checkbox" value="weighted_consecutive" id="weighted_consecutive_check" class="w-5 h-5 text-indigo-600" checked>
+                        <label for="weighted_consecutive_check" class="flex-1 font-medium text-gray-700 cursor-pointer">통계 + 연속 2자리수</label>
+                        <input type="number" id="weighted_consecutive_count" value="1" min="1" max="50" class="w-16 px-2 py-1 border border-gray-300 rounded text-center text-sm">
+                    </div>
+                    <div class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        <input type="checkbox" value="exclude_bottom" id="exclude_bottom_check" class="w-5 h-5 text-indigo-600" checked>
+                        <label for="exclude_bottom_check" class="flex-1 font-medium text-gray-700 cursor-pointer">통계 하위 15개 제외</label>
+                        <input type="number" id="exclude_bottom_count" value="1" min="1" max="50" class="w-16 px-2 py-1 border border-gray-300 rounded text-center text-sm">
+                    </div>
+                </div>
+                <div class="text-center flex gap-4 justify-center">
+                    <button 
+                        onclick="generateSelectedNumbers()" 
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-lg transition-colors text-lg"
+                    >
+                        생성
+                    </button>
+                    <button 
+                        onclick="resetCustomResults()" 
+                        class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-lg transition-colors text-lg"
+                    >
+                        초기화
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 생성 결과 표시 -->
+            <div id="customResultsContainer" class="bg-white rounded-lg shadow-lg p-6">
+                <div class="text-center text-gray-500">
+                    <p>위 버튼을 클릭하여 번호를 생성하세요.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="bg-gray-800 text-white text-center py-4 mt-8">
+        <div class="container mx-auto px-4">
+            <p class="text-sm">© 2024 LuckyStat 2.0 - 통계 기반 로또 번호 생성기</p>
+        </div>
+    </footer>
+
+    <!-- 스크립트 -->
+    <script src="js/data.js"></script>
+    <script src="js/generate.js"></script>
+    <script src="js/schedule.js"></script>
+    <script src="js/ui.js"></script>
+    <script>
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', () => {
+            // UI 초기화
+            uiManager.init();
+            
+            // 카운트다운 시작
+            uiManager.renderCountdown('countdownContainer');
+            
+            // 데이터 동기화 후 결과 로드 및 표시 (주차 확인)
+            (async () => {
+                try {
+                    // 공용 데이터 동기화 (비동기)
+                    const data = await dataManager.loadData();
+                    
+                    const resultsData = dataManager.loadResults();
+                    const currentWeekInfo = numberGenerator.getCurrentWeekNumber();
+                    
+                    // 주차가 바뀌었는지 확인
+                    let shouldRegenerate = false;
+                    if (!resultsData || !resultsData.results) {
+                        // 결과가 없으면 새로 생성
+                        shouldRegenerate = true;
+                    } else if (!resultsData.weekInfo) {
+                        // 주차 정보가 없으면 (이전 버전 호환) 새로 생성
+                        shouldRegenerate = true;
+                    } else {
+                        // 주차가 바뀌었는지 확인
+                        const savedWeekInfo = resultsData.weekInfo;
+                        if (savedWeekInfo.weekNumber !== currentWeekInfo.weekNumber || 
+                            savedWeekInfo.year !== currentWeekInfo.year) {
+                            // 주차가 바뀌었으면 새로 생성
+                            shouldRegenerate = true;
+                        }
+                    }
+                    
+                    if (shouldRegenerate) {
+                        // 새 번호 생성
+                        const newResults = numberGenerator.generate(data);
+                        dataManager.saveResults(newResults, currentWeekInfo);
+                        uiManager.renderResults(newResults, 'resultsContainer');
+                    } else {
+                        // 기존 결과 표시
+                        uiManager.renderResults(resultsData.results, 'resultsContainer');
+                    }
+                } catch (error) {
+                    console.error('데이터 로드 오류:', error);
+                    // 오류 시 기본 동작 (동기 버전 사용)
+                    const data = dataManager.loadDataSync();
+                    const resultsData = dataManager.loadResults();
+                    if (resultsData && resultsData.results) {
+                        uiManager.renderResults(resultsData.results, 'resultsContainer');
+                    } else {
+                        // 결과가 없으면 생성
+                        const newResults = numberGenerator.generate(data);
+                        const currentWeekInfo = numberGenerator.getCurrentWeekNumber();
+                        dataManager.saveResults(newResults, currentWeekInfo);
+                        uiManager.renderResults(newResults, 'resultsContainer');
+                    }
+                }
+            })();
+            
+            // 당첨번호 표시
+            uiManager.renderWinningNumbers('winningNumbers');
+            
+            // 스케줄 시작
+            scheduleManager.start((formatted, remaining) => {
+                uiManager.renderCountdown('countdownContainer');
+            });
+        });
+
+        // 번호별 통계 데이터 (1~1195회차 기준)
+        const numberStatsData = [
+            { number: 34, percent: 100, count: 204 },
+            { number: 27, percent: 99, count: 202 },
+            { number: 12, percent: 99, count: 202 },
+            { number: 33, percent: 99, count: 201 },
+            { number: 13, percent: 99, count: 201 },
+            { number: 17, percent: 98, count: 199 },
+            { number: 3, percent: 97, count: 198 },
+            { number: 43, percent: 96, count: 196 },
+            { number: 7, percent: 96, count: 195 },
+            { number: 6, percent: 96, count: 195 },
+            { number: 1, percent: 95, count: 194 },
+            { number: 37, percent: 95, count: 194 },
+            { number: 20, percent: 95, count: 194 },
+            { number: 38, percent: 95, count: 193 },
+            { number: 4, percent: 94, count: 192 },
+            { number: 24, percent: 94, count: 191 },
+            { number: 40, percent: 94, count: 191 },
+            { number: 26, percent: 94, count: 191 },
+            { number: 16, percent: 93, count: 190 },
+            { number: 31, percent: 93, count: 190 },
+            { number: 14, percent: 93, count: 190 },
+            { number: 18, percent: 93, count: 190 },
+            { number: 11, percent: 92, count: 188 },
+            { number: 45, percent: 92, count: 188 },
+            { number: 35, percent: 92, count: 187 },
+            { number: 19, percent: 92, count: 187 },
+            { number: 21, percent: 92, count: 187 },
+            { number: 39, percent: 91, count: 186 },
+            { number: 15, percent: 91, count: 186 },
+            { number: 2, percent: 90, count: 184 },
+            { number: 10, percent: 90, count: 184 },
+            { number: 36, percent: 90, count: 183 },
+            { number: 44, percent: 89, count: 182 },
+            { number: 30, percent: 89, count: 182 },
+            { number: 42, percent: 86, count: 176 },
+            { number: 8, percent: 86, count: 176 },
+            { number: 5, percent: 85, count: 174 },
+            { number: 28, percent: 85, count: 174 },
+            { number: 32, percent: 85, count: 173 },
+            { number: 29, percent: 82, count: 167 },
+            { number: 25, percent: 82, count: 167 },
+            { number: 23, percent: 80, count: 164 },
+            { number: 41, percent: 79, count: 161 },
+            { number: 22, percent: 78, count: 160 },
+            { number: 9, percent: 76, count: 156 }
+        ];
+
+        // 구간별 출현 횟수 데이터 (1~1195회차 기준)
+        const rangeStatsData = [
+            { range: '1-5', percent: 92, count: 12 },
+            { range: '6-10', percent: 85, count: 11 },
+            { range: '11-15', percent: 100, count: 13 },
+            { range: '16-20', percent: 100, count: 13 },
+            { range: '21-25', percent: 100, count: 13 },
+            { range: '26-30', percent: 100, count: 13 },
+            { range: '31-35', percent: 92, count: 12 },
+            { range: '36-40', percent: 100, count: 13 },
+            { range: '41-45', percent: 38, count: 5 }
+        ];
+
+        // 통계 데이터를 numberStats 형식으로 변환 (구간별 통계 포함)
+        function convertStatsToNumberStats(statsData, rangeStats) {
+            const numberStats = {};
+            
+            // 번호별 통계 데이터 변환
+            statsData.forEach(item => {
+                numberStats[item.number.toString()] = item.count;
+            });
+            
+            // 구간별 통계를 번호별 통계에 추가
+            rangeStats.forEach(rangeItem => {
+                const [start, end] = rangeItem.range.split('-').map(Number);
+                const rangeCount = rangeItem.count;
+                const numbersInRange = end - start + 1; // 구간 내 번호 개수
+                const additionalWeight = rangeCount / numbersInRange; // 구간별 출현 횟수를 구간 내 번호 개수로 나눔
+                
+                // 해당 구간의 모든 번호에 가중치 추가
+                for (let num = start; num <= end; num++) {
+                    const numKey = num.toString();
+                    if (numberStats[numKey]) {
+                        numberStats[numKey] += additionalWeight;
+                    } else {
+                        numberStats[numKey] = additionalWeight;
+                    }
+                }
+            });
+            
+            return numberStats;
+        }
+
+        // 선택된 방식으로 번호 생성
+        function generateSelectedNumbers() {
+            // 선택된 체크박스 가져오기
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][value]:checked');
+            
+            if (checkboxes.length === 0) {
+                alert('최소 하나 이상의 생성 방식을 선택해주세요.');
+                return;
+            }
+
+            // 통계 데이터를 numberStats 형식으로 변환 (구간별 통계 포함)
+            const numberStats = convertStatsToNumberStats(numberStatsData, rangeStatsData);
+            
+            // 결과 표시
+            const container = document.getElementById('customResultsContainer');
+            container.innerHTML = '';
+            
+            const innerContainer = document.createElement('div');
+            innerContainer.className = 'flex flex-col gap-4';
+            
+            // 각 선택된 방식에 대해 번호 생성
+            let resultIndex = 0;
+            checkboxes.forEach((checkbox) => {
+                const type = checkbox.value;
+                // 개수 입력 필드에서 값 가져오기
+                const countInput = document.getElementById(`${type}_count`);
+                const count = parseInt(countInput.value) || 1;
+                
+                // 설정된 개수만큼 번호 생성
+                for (let i = 0; i < count; i++) {
+                    let numbers = [];
+
+                    switch(type) {
+                        case 'random':
+                            // 랜덤으로 생성
+                            numbers = numberGenerator.generateUniqueNumbers(6);
+                            break;
+                        case 'weighted':
+                            // 통계기반
+                            numbers = numberGenerator.generateWeightedNumbers(6, numberStats);
+                            break;
+                        case 'weighted_consecutive':
+                            // 통계 + 연속 2자리수
+                            numbers = numberGenerator.generateWeightedWithConsecutive(6, numberStats);
+                            break;
+                        case 'exclude_bottom':
+                            // 통계 하위 15개 제외
+                            const bottomNumbers = numberGenerator.getBottomNumbers(numberStats, 15);
+                            numbers = numberGenerator.generateWeightedNumbers(6, numberStats, bottomNumbers);
+                            break;
+                    }
+
+                    const numbersContainer = document.createElement('div');
+                    numbersContainer.className = 'flex flex-wrap items-center gap-1 justify-center';
+                    numbersContainer.id = `customNumbersContainer_${resultIndex}`;
+                    
+                    // 원본 색상 정보 저장
+                    const originalColors = [];
+                    
+                    numbers.forEach((num, numIndex) => {
+                        const numberBadge = uiManager.createNumberBadge(num);
+                        numberBadge.dataset.originalColor = numberBadge.className;
+                        originalColors.push({
+                            element: numberBadge,
+                            originalColor: numberBadge.className
+                        });
+                        numbersContainer.appendChild(numberBadge);
+                    });
+                    
+                    // 확인 버튼 (번호 옆에 배치)
+                    const checkButton = document.createElement('button');
+                    checkButton.className = 'bg-white border border-gray-300 text-gray-700 font-medium py-1 px-2 rounded-lg hover:bg-gray-50 transition-all text-xs';
+                    checkButton.textContent = '확인';
+                    
+                    // 클로저로 값 저장
+                    const currentIndex = resultIndex;
+                    const currentNumbers = [...numbers];
+                    const currentContainer = numbersContainer;
+                    const originalColorsRef = originalColors;
+                    let isGray = false; // 현재 상태 추적
+                    
+                    // 확인 버튼 클릭 이벤트 (토글: 회색 ↔ 원래 색)
+                    checkButton.addEventListener('click', () => {
+                        const badges = currentContainer.querySelectorAll('span[data-original-color]');
+                        
+                        if (!isGray) {
+                            // 회색으로 변경
+                            badges.forEach((badge, badgeIndex) => {
+                                badge.className = 'inline-flex items-center justify-center w-[30px] h-[30px] rounded-full font-bold text-xs border-2 bg-gray-200 text-gray-700 border-gray-300';
+                            });
+                            isGray = true;
+                            
+                            // 번호 복사
+                            const numbersText = currentNumbers.join(' ');
+                            uiManager.copyToClipboard(numbersText);
+                        } else {
+                            // 원래 색상으로 복원
+                            badges.forEach((badge, badgeIndex) => {
+                                const originalColor = originalColorsRef[badgeIndex].originalColor;
+                                badge.className = originalColor;
+                            });
+                            isGray = false;
+                        }
+                    });
+                    
+                    numbersContainer.appendChild(checkButton);
+                    innerContainer.appendChild(numbersContainer);
+                    resultIndex++;
+                }
+            });
+            
+            container.appendChild(innerContainer);
+        }
+
+        // 결과 초기화 함수
+        function resetCustomResults() {
+            const container = document.getElementById('customResultsContainer');
+            container.innerHTML = `
+                <div class="text-center text-gray-500">
+                    <p>위 버튼을 클릭하여 번호를 생성하세요.</p>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
+

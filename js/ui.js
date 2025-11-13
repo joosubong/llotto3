@@ -99,10 +99,9 @@ class UIManager {
 
     // 등수 계산 함수
     calculateRank(numbers) {
-        // 1196회차 당첨번호 (6개 번호 + 보너스)
-        // 실제 로또 당첨번호: 8, 12, 15, 29, 40, ? (하나 빠진 것 같지만 일단 5개로 계산)
-        const winningNumbers = [8, 12, 15, 29, 40];
-        const bonusNumber = 14;
+        // 1197회차 당첨번호 (6개 번호 + 보너스)
+        const winningNumbers = [1, 5, 7, 26, 28, 43];
+        const bonusNumber = 30;
         
         // 맞춘 번호 개수 계산
         let matchCount = 0;
@@ -367,11 +366,11 @@ class UIManager {
         const container = document.getElementById(containerId);
         if (!container) return;
         
-        // 1196회차 (2025.11.01.) 8 12 15 29 40 +14
-        const winningNumbers = [8, 12, 15, 29, 40];
-        const bonusNumber = 14;
-        const round = 1196;
-        const date = '2025.11.01.';
+        // 1197회차 (2025.11.08.) 1 5 7 26 28 43 +30
+        const winningNumbers = [1, 5, 7, 26, 28, 43];
+        const bonusNumber = 30;
+        const round = 1197;
+        const date = '2025.11.08.';
         
         container.innerHTML = '';
         
@@ -405,12 +404,22 @@ class UIManager {
 
     // 지난 주 결과 모달 렌더링
     renderLastWeekModal() {
-        const lastWeekResults = this.dataManager.loadLastWeekResults();
+        // 고정된 로또 번호 조합 (10개) - 생성된 로또 번호와 동일
+        const fixedLottoNumbers = [
+            { numbers: [7, 16, 22, 34, 40, 42] },
+            { numbers: [3, 7, 15, 20, 36, 39] },
+            { numbers: [7, 14, 15, 31, 39, 43] },
+            { numbers: [3, 5, 6, 7, 34, 39] },
+            { numbers: [30, 31, 32, 37, 39, 43] },
+            { numbers: [3, 5, 17, 22, 33, 44] },
+            { numbers: [5, 12, 23, 30, 36, 40] },
+            { numbers: [3, 24, 27, 28, 39, 43] },
+            { numbers: [14, 26, 31, 33, 35, 40] },
+            { numbers: [1, 3, 11, 20, 33, 36] }
+        ];
         
-        if (!lastWeekResults || !lastWeekResults.results) {
-            alert('지난 주 결과가 없습니다.');
-            return;
-        }
+        // 고정된 번호를 지난 주 결과로 사용
+        const lastWeekResults = { results: fixedLottoNumbers };
         
         // 모달 생성
         const modal = document.createElement('div');
@@ -433,10 +442,10 @@ class UIManager {
         // 당첨번호 표시
         const winningNumbersContainer = modal.querySelector('#modalWinningNumbers');
         if (winningNumbersContainer) {
-            const winningNumbers = [8, 12, 15, 29, 40];
-            const bonusNumber = 14;
-            const round = 1196;
-            const date = '2025.11.01.';
+            const winningNumbers = [1, 5, 7, 26, 28, 43];
+            const bonusNumber = 30;
+            const round = 1197;
+            const date = '2025.11.08.';
             
             winningNumbersContainer.innerHTML = '';
             
@@ -472,36 +481,28 @@ class UIManager {
         if (resultsContainer) {
             resultsContainer.innerHTML = '';
             
-            if (!lastWeekResults.results || lastWeekResults.results.length === 0) {
-                resultsContainer.innerHTML = `
-                    <div class="text-center py-8 text-gray-500">
-                        <p>결과가 없습니다.</p>
-                    </div>
-                `;
-            } else {
-                // 모든 번호 조합을 하나의 박스 안에 배치
-                const innerContainer = document.createElement('div');
-                innerContainer.className = 'flex flex-col gap-4';
+            // 모든 번호 조합을 하나의 박스 안에 배치
+            const innerContainer = document.createElement('div');
+            innerContainer.className = 'flex flex-col gap-4';
+            
+            lastWeekResults.results.forEach((set, index) => {
+                const numbersContainer = document.createElement('div');
+                numbersContainer.className = 'flex flex-wrap items-center gap-1 justify-center';
                 
-                lastWeekResults.results.forEach((set, index) => {
-                    const numbersContainer = document.createElement('div');
-                    numbersContainer.className = 'flex flex-wrap items-center gap-1 justify-center';
-                    
-                    set.numbers.forEach(num => {
-                        const numberBadge = this.createNumberBadge(num);
-                        numbersContainer.appendChild(numberBadge);
-                    });
-                    
-                    // 등수 버튼 (번호 옆에 배치)
-                    const rank = this.calculateRank(set.numbers);
-                    const rankButton = this.createRankButton(rank);
-                    numbersContainer.appendChild(rankButton);
-                    
-                    innerContainer.appendChild(numbersContainer);
+                set.numbers.forEach(num => {
+                    const numberBadge = this.createNumberBadge(num);
+                    numbersContainer.appendChild(numberBadge);
                 });
                 
-                resultsContainer.appendChild(innerContainer);
-            }
+                // 등수 버튼 (번호 옆에 배치)
+                const rank = this.calculateRank(set.numbers);
+                const rankButton = this.createRankButton(rank);
+                numbersContainer.appendChild(rankButton);
+                
+                innerContainer.appendChild(numbersContainer);
+            });
+            
+            resultsContainer.appendChild(innerContainer);
         }
         
         // 닫기 버튼 이벤트

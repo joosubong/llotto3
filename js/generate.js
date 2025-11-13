@@ -14,55 +14,55 @@ class NumberGenerator {
         return kst;
     }
 
-    // 현재 주차 기반 시드 생성 (목요일 16시 30분 한국 시간 기준)
+    // 현재 주차 기반 시드 생성 (월요일 13시 한국 시간 기준)
     getCurrentSeed() {
         const kst = this.getKSTDate();
-        const dayOfWeek = kst.getDay(); // 0(일) ~ 6(토), 목요일은 4
-        const updateHour = 16; // 오후 4시
-        const updateMinutes = 30; // 30분
-        const updateDay = 4; // 목요일
+        const dayOfWeek = kst.getDay(); // 0(일) ~ 6(토), 월요일은 1
+        const updateHour = 13; // 오후 1시
+        const updateMinutes = 0; // 0분
+        const updateDay = 1; // 월요일
         
-        // 마지막 목요일 16시 30분(한국 시간) 찾기
-        // 목요일 16시 30분 이전이면 이전 주차, 16시 30분 이후면 현재 주차
-        let daysUntilLastThursday = 0;
+        // 마지막 월요일 13시(한국 시간) 찾기
+        // 월요일 13시 이전이면 이전 주차, 13시 이후면 현재 주차
+        let daysUntilLastMonday = 0;
         
         if (dayOfWeek === updateDay) {
-            // 오늘이 목요일
+            // 오늘이 월요일
             if (kst.getHours() < updateHour || (kst.getHours() === updateHour && kst.getMinutes() < updateMinutes)) {
-                // 16시 30분 이전이면 이전 주 목요일
-                daysUntilLastThursday = 7;
+                // 13시 이전이면 이전 주 월요일
+                daysUntilLastMonday = 7;
             } else {
-                // 16시 30분 이후면 현재 주차
-                daysUntilLastThursday = 0;
+                // 13시 이후면 현재 주차
+                daysUntilLastMonday = 0;
             }
         } else {
-            // 오늘이 목요일이 아님
-            // 목요일까지의 거리 계산
+            // 오늘이 월요일이 아님
+            // 월요일까지의 거리 계산
             if (dayOfWeek < updateDay) {
-                // 일요일(0) ~ 수요일(3)
-                daysUntilLastThursday = dayOfWeek + (7 - updateDay);
+                // 일요일(0)
+                daysUntilLastMonday = dayOfWeek + (7 - updateDay);
             } else {
-                // 금요일(5) ~ 토요일(6)
-                daysUntilLastThursday = dayOfWeek - updateDay;
+                // 화요일(2) ~ 토요일(6)
+                daysUntilLastMonday = dayOfWeek - updateDay;
             }
         }
         
-        const lastThursday = new Date(kst);
-        lastThursday.setDate(kst.getDate() - daysUntilLastThursday);
-        lastThursday.setHours(updateHour, updateMinutes, 0, 0); // 목요일 16시 30분 00초
+        const lastMonday = new Date(kst);
+        lastMonday.setDate(kst.getDate() - daysUntilLastMonday);
+        lastMonday.setHours(updateHour, updateMinutes, 0, 0); // 월요일 13시 00초
         
-        // 1970-01-01 16:30 (한국 시간 기준)을 기준으로 주차 수 계산
-        // 한국 시간은 UTC+9이므로, UTC 1970-01-01 07:30가 한국 시간 1970-01-01 16:30
-        const base = new Date(1970, 0, 1, 7, 30, 0); // UTC 1970-01-01 07:30 = KST 1970-01-01 16:30
+        // 1970-01-01 13:00 (한국 시간 기준)을 기준으로 주차 수 계산
+        // 한국 시간은 UTC+9이므로, UTC 1970-01-01 04:00가 한국 시간 1970-01-01 13:00
+        const base = new Date(1970, 0, 1, 4, 0, 0); // UTC 1970-01-01 04:00 = KST 1970-01-01 13:00
         
-        // lastThursday는 이미 KST이므로 UTC로 변환 필요
-        const lastThursdayUTC = new Date(lastThursday.getTime() - (9 * 60 * 60 * 1000));
+        // lastMonday는 이미 KST이므로 UTC로 변환 필요
+        const lastMondayUTC = new Date(lastMonday.getTime() - (9 * 60 * 60 * 1000));
         
-        const diffMs = lastThursdayUTC.getTime() - base.getTime();
+        const diffMs = lastMondayUTC.getTime() - base.getTime();
         const weekNumber = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 7));
         
         // 시드 생성: "LuckyStat" + 연도 + 주차를 숫자로 변환
-        const seedString = `LuckyStat${lastThursday.getFullYear()}_week${weekNumber}`;
+        const seedString = `LuckyStat${lastMonday.getFullYear()}_week${weekNumber}`;
         const numericSeed = this.stringToSeed(seedString);
         
         return numericSeed;
@@ -80,55 +80,55 @@ class NumberGenerator {
         return Math.abs(hash) % 2147483647;
     }
 
-    // 현재 주차 번호 반환 (목요일 16시 30분 한국 시간 기준)
+    // 현재 주차 번호 반환 (월요일 13시 한국 시간 기준)
     getCurrentWeekNumber() {
         const kst = this.getKSTDate();
-        const dayOfWeek = kst.getDay(); // 0(일) ~ 6(토), 목요일은 4
-        const updateHour = 16; // 오후 4시
-        const updateMinutes = 30; // 30분
-        const updateDay = 4; // 목요일
+        const dayOfWeek = kst.getDay(); // 0(일) ~ 6(토), 월요일은 1
+        const updateHour = 13; // 오후 1시
+        const updateMinutes = 0; // 0분
+        const updateDay = 1; // 월요일
         
-        // 마지막 목요일 16시 30분(한국 시간) 찾기
-        let daysUntilLastThursday = 0;
+        // 마지막 월요일 13시(한국 시간) 찾기
+        let daysUntilLastMonday = 0;
         
         if (dayOfWeek === updateDay) {
-            // 오늘이 목요일
+            // 오늘이 월요일
             if (kst.getHours() < updateHour || (kst.getHours() === updateHour && kst.getMinutes() < updateMinutes)) {
-                // 16시 30분 이전이면 이전 주 목요일
-                daysUntilLastThursday = 7;
+                // 13시 이전이면 이전 주 월요일
+                daysUntilLastMonday = 7;
             } else {
-                // 16시 30분 이후면 현재 주차
-                daysUntilLastThursday = 0;
+                // 13시 이후면 현재 주차
+                daysUntilLastMonday = 0;
             }
         } else {
-            // 오늘이 목요일이 아님
+            // 오늘이 월요일이 아님
             if (dayOfWeek < updateDay) {
-                // 일요일(0) ~ 수요일(3)
-                daysUntilLastThursday = dayOfWeek + (7 - updateDay);
+                // 일요일(0)
+                daysUntilLastMonday = dayOfWeek + (7 - updateDay);
             } else {
-                // 금요일(5) ~ 토요일(6)
-                daysUntilLastThursday = dayOfWeek - updateDay;
+                // 화요일(2) ~ 토요일(6)
+                daysUntilLastMonday = dayOfWeek - updateDay;
             }
         }
         
-        const lastThursday = new Date(kst);
-        lastThursday.setDate(kst.getDate() - daysUntilLastThursday);
-        lastThursday.setHours(updateHour, updateMinutes, 0, 0); // 목요일 16시 30분 00초
+        const lastMonday = new Date(kst);
+        lastMonday.setDate(kst.getDate() - daysUntilLastMonday);
+        lastMonday.setHours(updateHour, updateMinutes, 0, 0); // 월요일 13시 00초
         
-        // 1970-01-01 16:30 (한국 시간 기준)을 기준으로 주차 수 계산
-        // 한국 시간은 UTC+9이므로, UTC 1970-01-01 07:30가 한국 시간 1970-01-01 16:30
-        const base = new Date(1970, 0, 1, 7, 30, 0); // UTC 1970-01-01 07:30 = KST 1970-01-01 16:30
+        // 1970-01-01 13:00 (한국 시간 기준)을 기준으로 주차 수 계산
+        // 한국 시간은 UTC+9이므로, UTC 1970-01-01 04:00가 한국 시간 1970-01-01 13:00
+        const base = new Date(1970, 0, 1, 4, 0, 0); // UTC 1970-01-01 04:00 = KST 1970-01-01 13:00
         
-        // lastThursday는 이미 KST이므로 UTC로 변환 필요
-        const lastThursdayUTC = new Date(lastThursday.getTime() - (9 * 60 * 60 * 1000));
+        // lastMonday는 이미 KST이므로 UTC로 변환 필요
+        const lastMondayUTC = new Date(lastMonday.getTime() - (9 * 60 * 60 * 1000));
         
-        const diffMs = lastThursdayUTC.getTime() - base.getTime();
+        const diffMs = lastMondayUTC.getTime() - base.getTime();
         const weekNumber = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 7));
         
         return {
             weekNumber: weekNumber,
-            year: lastThursday.getFullYear(),
-            thursday: lastThursday.toISOString()
+            year: lastMonday.getFullYear(),
+            monday: lastMonday.toISOString()
         };
     }
 

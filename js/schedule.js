@@ -7,28 +7,28 @@ class ScheduleManager {
         this.countdownInterval = null;
     }
 
-    // 다음 목요일 오후 4시 30분 계산
+    // 다음 월요일 오후 1시 계산
     getNextUpdateTime() {
         const now = new Date();
-        const dayOfWeek = now.getDay(); // 0(일) ~ 6(토), 목요일은 4
-        const updateHour = 16; // 오후 4시
-        const updateMinutes = 30; // 30분
+        const dayOfWeek = now.getDay(); // 0(일) ~ 6(토), 월요일은 1
+        const updateHour = 13; // 오후 1시
+        const updateMinutes = 0; // 0분
         
-        // 목요일까지 남은 일수 계산
-        let daysUntilThursday = (4 - dayOfWeek + 7) % 7;
+        // 월요일까지 남은 일수 계산
+        let daysUntilMonday = (1 - dayOfWeek + 7) % 7;
         
-        // 오늘이 목요일이고 오후 4시 30분 이전이면 오늘, 아니면 다음 목요일
-        if (dayOfWeek === 4 && (now.getHours() < updateHour || (now.getHours() === updateHour && now.getMinutes() < updateMinutes))) {
-            daysUntilThursday = 0;
-        } else if (daysUntilThursday === 0) {
-            daysUntilThursday = 7; // 다음 주 목요일
+        // 오늘이 월요일이고 오후 1시 이전이면 오늘, 아니면 다음 월요일
+        if (dayOfWeek === 1 && (now.getHours() < updateHour || (now.getHours() === updateHour && now.getMinutes() < updateMinutes))) {
+            daysUntilMonday = 0;
+        } else if (daysUntilMonday === 0) {
+            daysUntilMonday = 7; // 다음 주 월요일
         }
 
-        const nextThursday = new Date(now);
-        nextThursday.setDate(now.getDate() + daysUntilThursday);
-        nextThursday.setHours(updateHour, updateMinutes, 0, 0); // 오후 4시 30분 00초
+        const nextMonday = new Date(now);
+        nextMonday.setDate(now.getDate() + daysUntilMonday);
+        nextMonday.setHours(updateHour, updateMinutes, 0, 0); // 오후 1시 00초
         
-        return nextThursday;
+        return nextMonday;
     }
 
     // 남은 시간 계산 (밀리초)

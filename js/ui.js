@@ -366,11 +366,11 @@ class UIManager {
         const container = document.getElementById(containerId);
         if (!container) return;
         
-        // 1197회차 (2025.11.08.) 1 5 7 26 28 43 +30
-        const winningNumbers = [1, 5, 7, 26, 28, 43];
-        const bonusNumber = 30;
-        const round = 1197;
-        const date = '2025.11.08.';
+        // 1198회차 (2025.11.15) 26 30 33 38 39 41 +21
+        const winningNumbers = [26, 30, 33, 38, 39, 41];
+        const bonusNumber = 21;
+        const round = 1198;
+        const date = '2025.11.15';
         
         container.innerHTML = '';
         
@@ -406,16 +406,16 @@ class UIManager {
     renderLastWeekModal() {
         // 고정된 로또 번호 조합 (10개) - 생성된 로또 번호와 동일
         const fixedLottoNumbers = [
-            { numbers: [7, 16, 22, 34, 40, 42] },
-            { numbers: [3, 7, 15, 20, 36, 39] },
-            { numbers: [7, 14, 15, 31, 39, 43] },
-            { numbers: [3, 5, 6, 7, 34, 39] },
-            { numbers: [30, 31, 32, 37, 39, 43] },
-            { numbers: [3, 5, 17, 22, 33, 44] },
-            { numbers: [5, 12, 23, 30, 36, 40] },
-            { numbers: [3, 24, 27, 28, 39, 43] },
-            { numbers: [14, 26, 31, 33, 35, 40] },
-            { numbers: [1, 3, 11, 20, 33, 36] }
+            { numbers: [2, 4, 18, 21, 23, 45] },
+            { numbers: [2, 13, 22, 26, 28, 36] },
+            { numbers: [1, 2, 8, 22, 26, 40] },
+            { numbers: [4, 6, 23, 31, 32, 36] },
+            { numbers: [1, 14, 21, 24, 27, 29] },
+            { numbers: [2, 15, 18, 25, 39, 43] },
+            { numbers: [2, 8, 13, 19, 32, 38] },
+            { numbers: [1, 2, 6, 15, 23, 32] },
+            { numbers: [4, 16, 39, 41, 44, 45] },
+            { numbers: [13, 19, 25, 37, 38, 41] }
         ];
         
         // 고정된 번호를 지난 주 결과로 사용
@@ -442,10 +442,10 @@ class UIManager {
         // 당첨번호 표시
         const winningNumbersContainer = modal.querySelector('#modalWinningNumbers');
         if (winningNumbersContainer) {
-            const winningNumbers = [1, 5, 7, 26, 28, 43];
-            const bonusNumber = 30;
-            const round = 1197;
-            const date = '2025.11.08.';
+            const winningNumbers = [26, 30, 33, 38, 39, 41];
+            const bonusNumber = 21;
+            const round = 1198;
+            const date = '2025.11.15';
             
             winningNumbersContainer.innerHTML = '';
             

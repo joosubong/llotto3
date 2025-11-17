@@ -141,16 +141,16 @@
             
             // 고정된 로또 번호 조합 (10개)
             const fixedLottoNumbers = [
-                { numbers: [7, 9, 10, 17, 22, 23] },
-                { numbers: [6, 7, 10, 27, 30, 39] },
-                { numbers: [6, 8, 9, 13, 17, 27] },
-                { numbers: [5, 6, 17, 27, 30, 37] },
-                { numbers: [8, 12, 21, 27, 31, 44] },
-                { numbers: [3, 13, 18, 22, 27, 29] },
-                { numbers: [4, 5, 9, 24, 38, 40] },
-                { numbers: [4, 9, 10, 21, 39, 44] },
-                { numbers: [10, 21, 23, 30, 31, 45] },
-                { numbers: [3, 7, 12, 17, 22, 45] }
+                { numbers: [2, 4, 18, 21, 23, 45] },
+                { numbers: [2, 13, 22, 26, 28, 36] },
+                { numbers: [1, 2, 8, 22, 26, 40] },
+                { numbers: [4, 6, 23, 31, 32, 36] },
+                { numbers: [1, 14, 21, 24, 27, 29] },
+                { numbers: [2, 15, 18, 25, 39, 43] },
+                { numbers: [2, 8, 13, 19, 32, 38] },
+                { numbers: [1, 2, 6, 15, 23, 32] },
+                { numbers: [4, 16, 39, 41, 44, 45] },
+                { numbers: [13, 19, 25, 37, 38, 41] }
             ];
             
             // 고정된 번호 표시
@@ -187,27 +187,27 @@
             { number: 18, percent: 93, count: 190 },
             { number: 19, percent: 92, count: 187 },
             { number: 20, percent: 95, count: 194 },
-            { number: 21, percent: 92, count: 187 },
+            { number: 21, percent: 92, count: 188 },
             { number: 22, percent: 78, count: 160 },
             { number: 23, percent: 80, count: 164 },
             { number: 24, percent: 94, count: 191 },
             { number: 25, percent: 82, count: 167 },
-            { number: 26, percent: 94, count: 192 },
+            { number: 26, percent: 95, count: 193 },
             { number: 27, percent: 99, count: 202 },
             { number: 28, percent: 86, count: 175 },
             { number: 29, percent: 82, count: 168 },
-            { number: 30, percent: 90, count: 183 },
+            { number: 30, percent: 90, count: 184 },
             { number: 31, percent: 93, count: 190 },
             { number: 32, percent: 85, count: 173 },
-            { number: 33, percent: 99, count: 201 },
+            { number: 33, percent: 99, count: 202 },
             { number: 34, percent: 100, count: 204 },
             { number: 35, percent: 92, count: 187 },
             { number: 36, percent: 90, count: 183 },
             { number: 37, percent: 95, count: 194 },
-            { number: 38, percent: 95, count: 193 },
-            { number: 39, percent: 91, count: 186 },
+            { number: 38, percent: 95, count: 194 },
+            { number: 39, percent: 92, count: 187 },
             { number: 40, percent: 94, count: 192 },
-            { number: 41, percent: 79, count: 161 },
+            { number: 41, percent: 79, count: 162 },
             { number: 42, percent: 86, count: 176 },
             { number: 43, percent: 97, count: 197 },
             { number: 44, percent: 89, count: 182 },
@@ -216,21 +216,23 @@
 
         // 구간별 출현 횟수 데이터 (1~1195회차 기준)
         const rangeStatsData = [
-            { range: '1-5', percent: 87, count: 13 },
-            { range: '6-10', percent: 73, count: 11 },
-            { range: '11-15', percent: 93, count: 14 },
-            { range: '16-20', percent: 80, count: 12 },
-            { range: '21-25', percent: 67, count: 10 },
-            { range: '26-30', percent: 100, count: 15 },
-            { range: '31-35', percent: 67, count: 10 },
-            { range: '36-40', percent: 93, count: 14 },
-            { range: '41-45', percent: 40, count: 6 }
+            { range: '1-5', percent: 75, count: 12 },
+            { range: '6-10', percent: 69, count: 11 },
+            { range: '11-15', percent: 81, count: 13 },
+            { range: '16-20', percent: 69, count: 11 },
+            { range: '21-25', percent: 62, count: 10 },
+            { range: '26-30', percent: 100, count: 16 },
+            { range: '31-35', percent: 62, count: 10 },
+            { range: '36-40', percent: 94, count: 15 },
+            { range: '41-45', percent: 44, count: 7 }
         ];
 
         // 기간별 미출현번호 데이터
         const missingNumbersData = [
+            { range: '1-10', numbers: [] },
             { range: '11-20', numbers: [18] },
-            { range: '21-30', numbers: [21] },
+            { range: '21-30', numbers: [] },
+            { range: '31-40', numbers: [] },
             { range: '41-45', numbers: [44] }
         ];
 

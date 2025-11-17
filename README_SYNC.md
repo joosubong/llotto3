@@ -84,3 +84,4 @@ this.UPDATE_URL = 'https://api.github.com/repos/YOUR_USERNAME/lotto1004/contents
 
 
 
+

@@ -99,9 +99,9 @@ class UIManager {
 
     // 등수 계산 함수
     calculateRank(numbers) {
-        // 1197회차 당첨번호 (6개 번호 + 보너스)
-        const winningNumbers = [1, 5, 7, 26, 28, 43];
-        const bonusNumber = 30;
+        // 1199회차 당첨번호 (6개 번호 + 보너스)
+        const winningNumbers = [16, 24, 25, 30, 31, 32];
+        const bonusNumber = 7;
         
         // 맞춘 번호 개수 계산
         let matchCount = 0;
@@ -366,11 +366,11 @@ class UIManager {
         const container = document.getElementById(containerId);
         if (!container) return;
         
-        // 1198회차 (2025.11.15) 26 30 33 38 39 41 +21
-        const winningNumbers = [26, 30, 33, 38, 39, 41];
-        const bonusNumber = 21;
-        const round = 1198;
-        const date = '2025.11.15';
+        // 1199회차 (2025.11.22) 16 24 25 30 31 32 +7
+        const winningNumbers = [16, 24, 25, 30, 31, 32];
+        const bonusNumber = 7;
+        const round = 1199;
+        const date = '2025.11.22';
         
         container.innerHTML = '';
         
@@ -406,16 +406,16 @@ class UIManager {
     renderLastWeekModal() {
         // 고정된 로또 번호 조합 (10개) - 생성된 로또 번호와 동일
         const fixedLottoNumbers = [
-            { numbers: [7, 9, 10, 17, 22, 23] },
-            { numbers: [6, 7, 10, 27, 30, 39] },
-            { numbers: [6, 8, 9, 13, 17, 27] },
-            { numbers: [5, 6, 17, 27, 30, 37] },
-            { numbers: [8, 12, 21, 27, 31, 44] },
-            { numbers: [3, 13, 18, 22, 27, 29] },
-            { numbers: [4, 5, 9, 24, 38, 40] },
-            { numbers: [4, 9, 10, 21, 39, 44] },
-            { numbers: [10, 21, 23, 30, 31, 45] },
-            { numbers: [3, 7, 12, 17, 22, 45] }
+            { numbers: [2, 4, 18, 21, 23, 45] },
+            { numbers: [2, 13, 22, 26, 28, 36] },
+            { numbers: [1, 2, 8, 22, 26, 40] },
+            { numbers: [4, 6, 23, 31, 32, 36] },
+            { numbers: [1, 14, 21, 24, 27, 29] },
+            { numbers: [2, 15, 18, 25, 39, 43] },
+            { numbers: [2, 8, 13, 19, 32, 38] },
+            { numbers: [1, 2, 6, 15, 23, 32] },
+            { numbers: [4, 16, 39, 41, 44, 45] },
+            { numbers: [13, 19, 25, 37, 38, 41] }
         ];
         
         // 고정된 번호를 지난 주 결과로 사용
@@ -442,10 +442,10 @@ class UIManager {
         // 당첨번호 표시
         const winningNumbersContainer = modal.querySelector('#modalWinningNumbers');
         if (winningNumbersContainer) {
-            const winningNumbers = [26, 30, 33, 38, 39, 41];
-            const bonusNumber = 21;
-            const round = 1198;
-            const date = '2025.11.15';
+            const winningNumbers = [16, 24, 25, 30, 31, 32];
+            const bonusNumber = 7;
+            const round = 1199;
+            const date = '2025.11.22';
             
             winningNumbersContainer.innerHTML = '';
             

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LuckyStat 2.0</title>
+    <title>직접 만드는 번호</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
@@ -19,7 +19,7 @@
         <div class="container mx-auto px-4 py-4">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                    <h1 class="text-2xl font-bold text-indigo-600">🎲 LuckyStat 2.0</h1>
+                    <h1 class="text-2xl font-bold text-indigo-600">🎲 직접 만드는 번호</h1>
                 </div>
             </div>
         </div>
@@ -27,35 +27,6 @@
 
     <!-- 메인 컨텐츠 -->
     <main class="container mx-auto px-4 py-8">
-        <!-- 지난 회차 보기 섹션 -->
-        <section class="bg-white rounded-lg shadow-lg p-6 mb-8">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div id="winningNumbers" class="flex items-center gap-2"></div>
-                <button 
-                    onclick="uiManager.renderLastWeekModal()" 
-                    class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-lg transition-colors"
-                >
-                    지난 회차 보기
-                </button>
-            </div>
-        </section>
-
-        <!-- 카운트다운 섹션 -->
-        <section class="bg-white rounded-lg shadow-lg p-6 mb-8">
-            <div id="countdownContainer"></div>
-        </section>
-
-        <!-- 결과 섹션 -->
-        <section class="mb-8">
-            <div class="text-center mb-6">
-                <h2 class="text-3xl font-bold text-gray-800 mb-2">생성된 로또 번호</h2>
-                <p class="text-gray-600">통계 기반으로 생성된 10개의 번호 조합</p>
-            </div>
-            <div id="resultsContainer" class="mb-6">
-                <!-- 결과가 여기에 동적으로 렌더링됩니다 -->
-            </div>
-        </section>
-
         <!-- 직접 만드는 번호 섹션 -->
         <section class="mb-8">
             <div class="text-center mb-6">
@@ -66,11 +37,6 @@
             <!-- 생성 옵션 선택 -->
             <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                    <div class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                        <input type="checkbox" value="random" id="random_check" class="w-5 h-5 text-indigo-600" checked>
-                        <label for="random_check" class="flex-1 font-medium text-gray-700 cursor-pointer">랜덤으로 생성</label>
-                        <input type="number" id="random_count" value="1" min="1" max="50" class="w-16 px-2 py-1 border border-gray-300 rounded text-center text-sm">
-                    </div>
                     <div class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
                         <input type="checkbox" value="weighted" id="weighted_check" class="w-5 h-5 text-indigo-600" checked>
                         <label for="weighted_check" class="flex-1 font-medium text-gray-700 cursor-pointer">통계기반</label>
@@ -88,7 +54,7 @@
                     </div>
                     <div class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
                         <input type="checkbox" value="exclude_missing" id="exclude_missing_check" class="w-5 h-5 text-indigo-600" checked>
-                        <label for="exclude_missing_check" class="flex-1 font-medium text-gray-700 cursor-pointer">미출현번호 제외</label>
+                        <label for="exclude_missing_check" class="flex-1 font-medium text-gray-700 cursor-pointer">통계 기반 + 기간별 미출현번호</label>
                         <input type="number" id="exclude_missing_count" value="1" min="1" max="50" class="w-16 px-2 py-1 border border-gray-300 rounded text-center text-sm">
                     </div>
                 </div>
@@ -116,55 +82,55 @@
             </div>
         </section>
 
+        <!-- 2차 직접 만드는 번호 섹션 -->
+        <section class="mb-8">
+            <div class="text-center mb-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">2차 직접 만드는 번호</h2>
+                <p class="text-gray-600">직접 만드는 번호에서 생성된 번호로 새로운 10개 조합을 생성합니다</p>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <div class="text-center mb-4">
+                    <p id="availableNumbersInfo" class="text-gray-600 mb-4">
+                        직접 만드는 번호에서 번호를 먼저 생성해주세요.
+                    </p>
+                    <button 
+                        onclick="generateSecondLevelNumbers()" 
+                        id="generateSecondBtn"
+                        disabled
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-lg transition-colors text-lg disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    >
+                        10개 조합 생성
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 생성 결과 표시 -->
+            <div id="secondResultsContainer" class="bg-white rounded-lg shadow-lg p-6 mb-4">
+                <div class="text-center text-gray-500">
+                    <p>위 버튼을 클릭하여 번호를 생성하세요.</p>
+                </div>
+            </div>
+            
+            <!-- 모든 번호 복사 버튼 -->
+            <div class="text-center">
+                <button 
+                    onclick="copyAllSecondNumbers()" 
+                    id="copyAllSecondBtn"
+                    disabled
+                    class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition-colors text-lg disabled:bg-gray-400 disabled:cursor-not-allowed"
+                >
+                    모든 번호 복사하기
+                </button>
+            </div>
+        </section>
     </main>
-
-    <!-- 푸터 -->
-    <footer class="bg-gray-800 text-white text-center py-4 mt-8">
-        <div class="container mx-auto px-4">
-            <p class="text-sm">© 2024 LuckyStat 2.0 - 통계 기반 로또 번호 생성기</p>
-        </div>
-    </footer>
 
     <!-- 스크립트 -->
     <script src="js/data.js"></script>
     <script src="js/generate.js"></script>
-    <script src="js/schedule.js"></script>
     <script src="js/ui.js"></script>
     <script>
-        // 페이지 로드 시 초기화
-        document.addEventListener('DOMContentLoaded', () => {
-            // UI 초기화
-            uiManager.init();
-            
-            // 카운트다운 시작
-            uiManager.renderCountdown('countdownContainer');
-            
-            // 고정된 로또 번호 조합 (10개)
-            const fixedLottoNumbers = [
-                { numbers: [6, 9, 16, 39, 41, 45] },
-                { numbers: [2, 21, 35, 37, 38, 39] },
-                { numbers: [3, 8, 12, 17, 37, 43] },
-                { numbers: [9, 20, 21, 40, 42, 45] },
-                { numbers: [3, 10, 12, 17, 40, 41] },
-                { numbers: [10, 24, 34, 40, 42, 45] },
-                { numbers: [19, 24, 26, 34, 37, 40] },
-                { numbers: [3, 5, 12, 35, 38, 40] },
-                { numbers: [6, 8, 17, 22, 31, 40] },
-                { numbers: [5, 19, 26, 37, 38, 43] }
-            ];
-            
-            // 고정된 번호 표시
-            uiManager.renderResults(fixedLottoNumbers, 'resultsContainer');
-            
-            // 당첨번호 표시
-            uiManager.renderWinningNumbers('winningNumbers');
-            
-            // 스케줄 시작
-            scheduleManager.start((formatted, remaining) => {
-                uiManager.renderCountdown('countdownContainer');
-            });
-        });
-
         // 번호별 통계 데이터 (1~1195회차 기준)
         const numberStatsData = [
             { number: 1, percent: 96, count: 195 },
@@ -245,6 +211,24 @@
             return missingNumbers;
         }
 
+        // 직접 만드는 번호에서 생성된 번호들을 저장하는 전역 변수
+        let generatedNumbersSet = new Set();
+
+        // 사용 가능한 번호 정보 업데이트
+        function updateAvailableNumbersInfo() {
+            const infoElement = document.getElementById('availableNumbersInfo');
+            const generateBtn = document.getElementById('generateSecondBtn');
+            
+            if (generatedNumbersSet.size === 0) {
+                infoElement.textContent = '직접 만드는 번호에서 번호를 먼저 생성해주세요.';
+                generateBtn.disabled = true;
+            } else {
+                const sortedNumbers = Array.from(generatedNumbersSet).sort((a, b) => a - b);
+                infoElement.textContent = `사용 가능한 번호 (${generatedNumbersSet.size}개): ${sortedNumbers.join(', ')}`;
+                generateBtn.disabled = false;
+            }
+        }
+
         // 통계 데이터를 numberStats 형식으로 변환 (구간별 통계 포함)
         function convertStatsToNumberStats(statsData, rangeStats) {
             const numberStats = {};
@@ -308,10 +292,6 @@
                     let numbers = [];
 
                     switch(type) {
-                        case 'random':
-                            // 랜덤으로 생성
-                            numbers = numberGenerator.generateUniqueNumbers(6);
-                            break;
                         case 'weighted':
                             // 통계기반
                             numbers = numberGenerator.generateWeightedNumbers(6, numberStats);
@@ -326,7 +306,7 @@
                             numbers = numberGenerator.generateWeightedNumbers(6, numberStats, bottomNumbers);
                             break;
                         case 'exclude_missing':
-                            // 미출현번호 제외 통계기반
+                            // 통계 기반 + 기간별 미출현번호 제외
                             const missingNumbers = getMissingNumbers();
                             numbers = numberGenerator.generateWeightedNumbers(6, numberStats, missingNumbers);
                             break;
@@ -340,6 +320,9 @@
                     const originalColors = [];
                     
                     numbers.forEach((num, numIndex) => {
+                        // 생성된 번호를 Set에 추가
+                        generatedNumbersSet.add(num);
+                        
                         const numberBadge = uiManager.createNumberBadge(num);
                         numberBadge.dataset.originalColor = numberBadge.className;
                         originalColors.push({
@@ -348,6 +331,9 @@
                         });
                         numbersContainer.appendChild(numberBadge);
                     });
+                    
+                    // 사용 가능한 번호 정보 업데이트
+                    updateAvailableNumbersInfo();
                     
                     // 확인 버튼 (번호 옆에 배치)
                     const checkButton = document.createElement('button');
@@ -402,8 +388,133 @@
                     <p>위 버튼을 클릭하여 번호를 생성하세요.</p>
                 </div>
             `;
+            // 생성된 번호 Set도 초기화
+            generatedNumbersSet.clear();
+            updateAvailableNumbersInfo();
+        }
+
+        // 2차 직접 만드는 번호 생성 함수
+        function generateSecondLevelNumbers() {
+            if (generatedNumbersSet.size < 6) {
+                alert('최소 6개 이상의 번호가 필요합니다. 직접 만드는 번호에서 더 많은 번호를 생성해주세요.');
+                return;
+            }
+
+            const availableNumbers = Array.from(generatedNumbersSet).sort((a, b) => a - b);
+            const container = document.getElementById('secondResultsContainer');
+            container.innerHTML = '';
+
+            const innerContainer = document.createElement('div');
+            innerContainer.className = 'flex flex-col gap-4';
+
+            // 통계 데이터를 numberStats 형식으로 변환
+            const fullNumberStats = convertStatsToNumberStats(numberStatsData, rangeStatsData);
+            
+            // 1차에서 생성된 번호들만 포함하는 필터링된 통계 생성
+            const filteredNumberStats = {};
+            availableNumbers.forEach(num => {
+                const numKey = num.toString();
+                if (fullNumberStats[numKey]) {
+                    filteredNumberStats[numKey] = fullNumberStats[numKey];
+                } else {
+                    filteredNumberStats[numKey] = 1; // 통계가 없으면 최소 가중치
+                }
+            });
+
+            // 10개 조합 생성 (통계 기반)
+            for (let i = 0; i < 10; i++) {
+                // 통계 기반으로 6개 번호 선택
+                const numbers = numberGenerator.generateWeightedNumbers(6, filteredNumberStats);
+
+                const numbersContainer = document.createElement('div');
+                numbersContainer.className = 'flex flex-wrap items-center gap-1 justify-center';
+                numbersContainer.id = `secondNumbersContainer_${i}`;
+                
+                // 원본 색상 정보 저장
+                const originalColors = [];
+                
+                numbers.forEach((num, numIndex) => {
+                    const numberBadge = uiManager.createNumberBadge(num);
+                    numberBadge.dataset.originalColor = numberBadge.className;
+                    originalColors.push({
+                        element: numberBadge,
+                        originalColor: numberBadge.className
+                    });
+                    numbersContainer.appendChild(numberBadge);
+                });
+                
+                // 확인 버튼 (번호 옆에 배치)
+                const checkButton = document.createElement('button');
+                checkButton.className = 'bg-white border border-gray-300 text-gray-700 font-medium py-1 px-2 rounded-lg hover:bg-gray-50 transition-all text-xs';
+                checkButton.textContent = '확인';
+                
+                // 클로저로 값 저장
+                const currentNumbers = [...numbers];
+                const currentContainer = numbersContainer;
+                const originalColorsRef = originalColors;
+                let isGray = false; // 현재 상태 추적
+                
+                // 확인 버튼 클릭 이벤트 (토글: 회색 ↔ 원래 색)
+                checkButton.addEventListener('click', () => {
+                    const badges = currentContainer.querySelectorAll('span[data-original-color]');
+                    
+                    if (!isGray) {
+                        // 회색으로 변경
+                        badges.forEach((badge, badgeIndex) => {
+                            badge.className = 'inline-flex items-center justify-center w-[30px] h-[30px] rounded-full font-bold text-xs border-2 bg-gray-200 text-gray-700 border-gray-300';
+                        });
+                        isGray = true;
+                        
+                        // 번호 복사
+                        const numbersText = currentNumbers.join(' ');
+                        uiManager.copyToClipboard(numbersText);
+                    } else {
+                        // 원래 색상으로 복원
+                        badges.forEach((badge, badgeIndex) => {
+                            const originalColor = originalColorsRef[badgeIndex].originalColor;
+                            badge.className = originalColor;
+                        });
+                        isGray = false;
+                    }
+                });
+                
+                numbersContainer.appendChild(checkButton);
+                innerContainer.appendChild(numbersContainer);
+            }
+            
+            container.appendChild(innerContainer);
+            
+            // 모든 번호 복사 버튼 활성화
+            const copyAllBtn = document.getElementById('copyAllSecondBtn');
+            if (copyAllBtn) {
+                copyAllBtn.disabled = false;
+            }
+        }
+
+        // 모든 2차 번호 복사 함수
+        function copyAllSecondNumbers() {
+            const container = document.getElementById('secondResultsContainer');
+            const numberContainers = container.querySelectorAll('[id^="secondNumbersContainer_"]');
+            
+            if (numberContainers.length === 0) {
+                alert('생성된 번호가 없습니다.');
+                return;
+            }
+            
+            const allNumbers = [];
+            numberContainers.forEach(container => {
+                const badges = container.querySelectorAll('span[data-original-color]');
+                const numbers = Array.from(badges).map(badge => badge.textContent.trim());
+                allNumbers.push(numbers.join(' '));
+            });
+            
+            // 각 조합을 줄바꿈으로 구분하여 복사
+            const numbersText = allNumbers.join('\n');
+            uiManager.copyToClipboard(numbersText);
+            
+            // 복사 완료 알림 (선택사항)
+            alert(`${allNumbers.length}개 조합이 복사되었습니다.`);
         }
     </script>
 </body>
 </html>
-
